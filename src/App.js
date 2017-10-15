@@ -16,10 +16,22 @@ class Map extends React.Component {
       container: this.mapContainer,
       style: 'mapbox://styles/mapbox/light-v9'
     });
+    this.map.addControl(new mapboxgl.GeolocateControl({
+      positionOptions: {
+        enableHighAccuracy: true
+      },
+      trackUserLocation: true
+    }));
+    let r = this;
+    this.map.on('click', function(e) { r.handleClick(e); });
   }
 
   componentWillUnmount() {
     this.map.remove();
+  }
+
+  handleClick(e) {
+    new mapboxgl.Marker().setLngLat([e.lngLat.lng, e.lngLat.lat]).addTo(this.map);
   }
 
   render() {
@@ -32,6 +44,7 @@ class Map extends React.Component {
 
     return <div style={style} ref={el => this.mapContainer = el}></div>;
   }
+
 }
 
 export default App;
